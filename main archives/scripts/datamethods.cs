@@ -10,11 +10,9 @@ namespace sql_topicos_sc
     internal class datamethods
     {
         private static datamethods _instance;
-
+        
         private string connectionstring =
-        "Data Source=AVATOPC\\LOCALHOST; Initial Catalog=topicos_farmacias; Integrated Security=True";
-        //private string connectionstring =
-        //"Data Source=.\\SQLEXPRESS; Initial Catalog=topicos_farmacias; integrated security=true";
+        "Data Source=.\\SQLEXPRESS; Initial Catalog=topicos_farmacias; integrated security=true";
         SqlConnection _connection;
         SqlCommand cmd;
         string query;
