@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +9,12 @@ namespace sql_topicos_sc
 {
     internal class datamethods
     {
+        private static datamethods _instance;
+
         private string connectionstring =
-        "Data Source=.\SQLEXPRESS; Initial Catalog=topicos_farmacias; integrated security=true";
+        "Data Source=AVATOPC\\LOCALHOST; Initial Catalog=topicos_farmacias; Integrated Security=True";
+        //private string connectionstring =
+        //"Data Source=.\\SQLEXPRESS; Initial Catalog=topicos_farmacias; integrated security=true";
         SqlConnection _connection;
         SqlCommand cmd;
         string query;
@@ -18,6 +22,18 @@ namespace sql_topicos_sc
         public datamethods()
         {
             _connection = new SqlConnection(connectionstring);
+        }
+
+        public static datamethods Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new datamethods();
+                }
+                return _instance;
+            }
         }
 
         public void add_farmacias(int _id_farmacia, string _nombre, string _telefono,
@@ -46,16 +62,16 @@ namespace sql_topicos_sc
                 _connection.Close();
             }
         }
-        public void add_medicamentos(int _id_medicamentos, string _nombre,
+        public void add_medicamentos(int _id_medicamento, string _nombre,
             string _componentes, string _comercial)
         {
             try
             {
                 _connection.Open();
                 query = "insert into medicamentos (id_medicamento, nombre, componentes, comercial)" +
-                        " values (@_id_medicamentos, @_nombre, @_componentes, @_comercial)";
+                        " values (@_id_medicamento, @_nombre, @_componentes, @_comercial)";
                 cmd = new SqlCommand(query, _connection);
-                cmd.Parameters.AddWithValue("@_id_medicamentos", _id_medicamentos);
+                cmd.Parameters.AddWithValue("@_id_medicamento", _id_medicamento);
                 cmd.Parameters.AddWithValue("@_nombre", _nombre);
                 cmd.Parameters.AddWithValue("@_componentes", _componentes);
                 cmd.Parameters.AddWithValue("@_comercial", _comercial);
@@ -82,11 +98,11 @@ namespace sql_topicos_sc
                     "@_numero_calle, @_cp)";
                 cmd = new SqlCommand(query, _connection);
                 cmd.Parameters.AddWithValue("@_id_propietario", _id_propietario);
-                cmd.Parameters.AddWithValue("@_", _nombre);
-                cmd.Parameters.AddWithValue("@_", _ciudad);
-                cmd.Parameters.AddWithValue("@_", _calle);
-                cmd.Parameters.AddWithValue("@_", _numero_calle);
-                cmd.Parameters.AddWithValue("@_", _cp);
+                cmd.Parameters.AddWithValue("@_nombre", _nombre);
+                cmd.Parameters.AddWithValue("@_ciudad", _ciudad);
+                cmd.Parameters.AddWithValue("@_calle", _calle);
+                cmd.Parameters.AddWithValue("@_numero_calle", _numero_calle);
+                cmd.Parameters.AddWithValue("@_cp", _cp);
                 cmd.ExecuteNonQuery();
             }
             catch (Exception e)
@@ -109,7 +125,8 @@ namespace sql_topicos_sc
                     + " values (@_id_ciudad, @_nombre, @_estado" +
                     ", @_superficie, @_poblacion)";
                 cmd = new SqlCommand(query, _connection);
-                cmd.Parameters.AddWithValue("@_id_ciudad", _nombre);
+                cmd.Parameters.AddWithValue("@_id_ciudad", _id_ciudad);
+                cmd.Parameters.AddWithValue("@_nombre", _nombre);
                 cmd.Parameters.AddWithValue("@_estado", _estado);
                 cmd.Parameters.AddWithValue("@_superficie", _superficie);
                 cmd.Parameters.AddWithValue("@_poblacion", _poblacion);
