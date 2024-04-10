@@ -1,25 +1,32 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static sql_topicos_sc.datamethods;
+using System.Windows.Forms;
 
 namespace sql_topicos_sc
 {
     internal class Events
     {
-        datamethods data = new datamethods();
+        private readonly procedure _procedure;
+
+        public Events(procedure procedure)
+        {
+            _procedure = procedure;
+        }
+
         public void Click_AddFarmacias(object sender, EventArgs e)
         {
-            int id_farmacia;
-            string nombre;
-            string telefono;
-            string domicilio;
-            int id_ciudad;
-            int id_propietario;
-            data.add_farmacias(id_farmacia,nombre,telefono,
-                domicilio,id_ciudad,id_propietario);
+            int id_farmacia = Convert.ToInt32(_procedure.IT_id_farmacia.Text);
+            string nombre = _procedure.IT_nombre.Text;
+            string telefono = _procedure.IT_telefono.Text;
+            string domicilio = _procedure.IT_domicilio.Text;
+            int id_ciudad = Convert.ToInt32(_procedure.IT_id_ciudad.Text);
+            int id_propietario = Convert.ToInt32(_procedure.IT_id_propietario.Text);
+            //data.add_farmacias(id_farmacia, nombre, telefono,
+            //domicilio, id_ciudad, id_propietario);
         }
         public void Click_Addmedicamentos(object sender, EventArgs e)
         {
@@ -27,8 +34,8 @@ namespace sql_topicos_sc
             string nombre;
             string componentes;
             string comercial;
-            data.add_medicamentos(id_medicamento, nombre, 
-                componentes,comercial);
+            //data.add_medicamentos(id_medicamento, nombre,
+                //componentes, comercial);
         }
         public void Click_Addpropietarios(object sender, EventArgs e)
         {
@@ -38,7 +45,7 @@ namespace sql_topicos_sc
             string calle;
             string numero_calle;
             string cp;
-            data.add_propietarios(id_propietario,nombre,ciudad,calle,numero_calle,cp);
+            //data.add_propietarios(id_propietario, nombre, ciudad, calle, numero_calle, cp);
         }
         public void Click_Addciudades(object sender, EventArgs e)
         {
@@ -47,7 +54,7 @@ namespace sql_topicos_sc
             string estado;
             string superficie;
             string poblacion;
-            data.add_ciudades(id_ciudades,nombre,estado,superficie,poblacion);
+            //data.add_ciudades(id_ciudades, nombre, estado, superficie, poblacion);
         }
         public void Click_Addclientes(object sender, EventArgs e)
         {
@@ -59,7 +66,7 @@ namespace sql_topicos_sc
             string numero_calle;
             string cp;
             string rfc;
-            data.add_clientes(id_clientes,nombre,telefono,correo,calle,numero_calle,cp,rfc);
+            //data.add_clientes(id_clientes, nombre, telefono, correo, calle, numero_calle, cp, rfc);
         }
         public void Click_Addtickets(object sender, EventArgs e)
         {
@@ -68,19 +75,24 @@ namespace sql_topicos_sc
             string hora;
             string costo_total;
             string id_cliente;
-            data.add_tickets(id_tickets,fecha,hora,costo_total,id_cliente);
+            //data.add_tickets(id_tickets, fecha, hora, costo_total, id_cliente);
         }
         public void Click_AddDetallesMed(object sender, EventArgs e)
         {
             int id_farmacia;
             int id_medicamento;
-            data.add_detalles_medicamentos(id_farmacia,id_medicamento);
+            //data.add_detalles_medicamentos(id_farmacia, id_medicamento);
         }
         public void Click_AddDetallesCom(object sender, EventArgs e)
         {
             int id_ticket;
             int id_medicamento;
-            data.add_detalles_compras(id_ticket,id_medicamento);
+            //data.add_detalles_compras(id_ticket, id_medicamento);
+        }
+
+        public void Click_b_Salir(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
