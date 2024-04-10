@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using static sql_topicos_sc.datamethods;
-using static sql_topicos_sc.procedure;
 
 
 namespace sql_topicos_sc
@@ -19,35 +17,33 @@ namespace sql_topicos_sc
         {
             public mainForm()
             {
-
-            }
-
-            public void ChangePanel(groups _panel)
-            {
-
+                this.MaximizeBox = true;
+                this.BackColor = Color.Black;
             }
         }
         //grupo de botones, labels y comboboxes
         public class groups : TableLayoutPanel
         {
-            public groups()
+            private mainForm parentForm;
+            public groups(mainForm form)
             {
-
+                this.parentForm = form;
+                this.Dock = DockStyle.None;
+                this.parentForm.SizeChanged += MainForm_SizeChanged;
             }
 
-            public void groupsSizeChange(mainForm _form)
+            private void MainForm_SizeChanged(object sender, EventArgs e)
             {
-
+                this.Size = parentForm.ClientSize;
             }
         }
         //botón
         public class roundButton : Button
         {
+            private int diameter = 30;
             private Color hoverColor = Color.FromArgb(0,80,142);
             private Color normalColor = Color.FromArgb(0, 122, 204);
-            private Color textColor = Color.FromArgb(0, 0, 0);
-
-            private int borderRadius = 20;
+            private Color textColor = Color.FromArgb(255, 255, 255);
 
             private Size originalSize;
             private Size targetSize;
@@ -59,14 +55,15 @@ namespace sql_topicos_sc
                 this.Size = new Size(100, 40);
                 this.FlatStyle = FlatStyle.Flat;
                 this.FlatAppearance.BorderSize = 0;
+                this.TextAlign = ContentAlignment.MiddleCenter;
+                this.AutoSize = true;
                 this.BackColor = normalColor;
                 this.ForeColor = textColor;
-                this.Font = new System.Drawing.Font(this.Font, FontStyle.Bold);
+                this.Font = new Font(this.Font, FontStyle.Bold);
 
                 originalSize = this.Size;
                 targetSize = this.Size + expansion;
 
-                this.Paint += roundButton_Paint;
                 this.MouseEnter += roundButton_MouseEnter;
                 this.MouseLeave += roundButton_MouseLeave;
             }
@@ -74,13 +71,11 @@ namespace sql_topicos_sc
             {
                 this.BackColor = hoverColor;
                 AnimateButton(targetSize);
-                Console.WriteLine(this.Size);
             }
             private void roundButton_MouseLeave(object sender, EventArgs e)
             {
                 this.BackColor = normalColor;
                 AnimateButton(originalSize);
-                Console.WriteLine(this.Size);
             }
 
             private void AnimateButton(Size targetSize)
@@ -94,23 +89,34 @@ namespace sql_topicos_sc
                 timer = new Timer();
                 timer.Interval = 10;
 
-                Size deltaSize = new Size(targetSize.Width - this.Width, targetSize.Height - this.Height);
+                int deltaX = (targetSize.Width - originalSize.Width) / 2;
+                int deltaY = (targetSize.Height - originalSize.Height) / 2;
 
                 timer.Tick += (sender, e) =>
                 {
-                    if (deltaSize.Width > 0 && this.Width < targetSize.Width ||
-                        deltaSize.Width < 0 && this.Width > targetSize.Width ||
-                        deltaSize.Height > 0 && this.Height < targetSize.Height ||
-                        deltaSize.Height < 0 && this.Height > targetSize.Height)
+                    int newWidth = this.Width + deltaX;
+                    int newHeight = this.Height + deltaY;
+                    int newLeft = this.Left - deltaX;
+                    int newTop = this.Top - deltaY;
+
+                    if (newWidth >= targetSize.Width)
                     {
-                        this.Width += Math.Sign(deltaSize.Width);
-                        this.Height += Math.Sign(deltaSize.Height);
-                        this.Region = new Region(new Rectangle(0, 0, this.Width, this.Height));
+                        newWidth = targetSize.Width;
+                        newLeft = this.Left - (targetSize.Width - this.Width);
                     }
-                    else
+
+                    if (newHeight >= targetSize.Height)
                     {
-                        this.Size = targetSize;
-                        this.Region = new Region(new Rectangle(0, 0, this.Width, this.Height));
+                        newHeight = targetSize.Height;
+                        newTop = this.Top - (targetSize.Height - this.Height);
+                    }
+
+                    this.Size = new Size(newWidth, newHeight);
+                    this.Location = new Point(newLeft, newTop);
+                    this.Region = new Region(new Rectangle(0, 0, this.Width, this.Height));
+
+                    if (this.Size == targetSize)
+                    {
                         timer.Stop();
                         timer.Dispose();
                     }
@@ -119,33 +125,20 @@ namespace sql_topicos_sc
                 timer.Start();
             }
 
-            private void roundButton_Paint(object sender, PaintEventArgs e)
+            protected override void OnPaint(PaintEventArgs pevent)
             {
+                base.OnPaint(pevent);
+
                 GraphicsPath path = new GraphicsPath();
-
-                path.AddArc(0, 0, borderRadius * 2, borderRadius * 2, 180, 90);
-                path.AddArc(this.Width - borderRadius * 2, 0, borderRadius * 2, borderRadius * 2, 270, 90);
-                path.AddArc(this.Width - borderRadius * 2, this.Height - borderRadius * 2, borderRadius * 2, borderRadius * 2, 0, 90);
-                path.AddArc(0, this.Height - borderRadius * 2, borderRadius * 2, borderRadius * 2, 90, 90);
-                path.CloseFigure();
-
-                e.Graphics.FillPath(new SolidBrush(this.BackColor), path);
-                e.Graphics.DrawPath(new Pen(this.BackColor), path);
-
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
-                e.Graphics.DrawString(this.Text, this.Font, new SolidBrush(this.ForeColor), this.ClientRectangle, sf);
-            }
-
-            protected override void OnTextChanged(EventArgs e)
-            {
-                base.OnTextChanged(e);
-
-                Size size = TextRenderer.MeasureText(this.Text, this.Font);
-                this.Width = size.Width + 20;
-                this.Height = size.Height + 25;
-                this.Region = new Region(new Rectangle(0, 0, this.Width, this.Height));
+                Rectangle rectangulo = new Rectangle(0, 0, diameter, diameter);
+                path.AddArc(rectangulo, 180, 90);
+                rectangulo.X = this.Width - diameter;
+                path.AddArc(rectangulo, 270, 90);
+                rectangulo.Y = this.Height - diameter;
+                path.AddArc(rectangulo, 0, 90);
+                rectangulo.X = 0;
+                path.AddArc(rectangulo, 90, 90);
+                this.Region = new Region(path);
             }
         }
         //combobox para insertar texto
