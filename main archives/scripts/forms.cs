@@ -17,7 +17,8 @@ namespace sql_topicos_sc
         {
             public mainForm()
             {
-                this.MaximizeBox = true;
+                this.WindowState = FormWindowState.Maximized;
+                this.MinimumSize = new Size(1280, 720);
                 this.BackColor = Color.Black;
             }
         }
@@ -29,6 +30,7 @@ namespace sql_topicos_sc
             {
                 this.parentForm = form;
                 this.Dock = DockStyle.None;
+                this.Size = parentForm.ClientSize;
                 this.parentForm.SizeChanged += MainForm_SizeChanged;
             }
 
@@ -152,11 +154,26 @@ namespace sql_topicos_sc
         //texto para aclaraciones
         public class ShowControlText : Label
         {
+            private Color textColor = Color.FromArgb(255, 255, 255);
             public ShowControlText()
             {
-
+                this.ForeColor = textColor;
             }
 
+        }
+        public class readerGrid : DataGridView
+        {
+            private mainForm parentForm;
+            public readerGrid(mainForm form)
+            {
+                this.parentForm = form;
+                this.Size = parentForm.ClientSize;
+                this.parentForm.SizeChanged += MainForm_SizeChanged;
+            }
+            private void MainForm_SizeChanged(object sender, EventArgs e)
+            {
+                this.Size = parentForm.ClientSize;
+            }
         }
     }
 }
