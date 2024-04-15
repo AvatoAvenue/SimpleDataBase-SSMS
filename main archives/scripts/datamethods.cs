@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using static sql_topicos_sc.forms;
+using System.Windows.Forms;
 
 namespace sql_topicos_sc
 {
@@ -14,9 +15,7 @@ namespace sql_topicos_sc
         private static datamethods _instance;
 
         private string connectionstring =
-        "Data Source=.\\LOCALHOST; Initial Catalog=topicos_farmacias; Integrated Security=True";
-        //private string connectionstring =
-        //"Data Source=.\\SQLEXPRESS; Initial Catalog=topicos_farmacias; integrated security=true";
+        "Data Source=.\\SQLEXPRESS; Initial Catalog=topicos_farmacias; integrated security=true";
         SqlConnection _connection;
         SqlCommand cmd;
         SqlDataAdapter adapter;
@@ -43,13 +42,15 @@ namespace sql_topicos_sc
 
         //añadir
         public void add_farmacias(int _id_farmacia, string _nombre, string _telefono,
-            string _domicilio, int _id_ciudad, int _id_propietario)
+    string _domicilio, int _id_ciudad, int _id_propietario)
         {
             try
             {
                 _connection.Open();
-                query = "insert into farmacias (id_farmacia, nombre, telefono, domicilio, id_ciudad, id_propietario)" +
-                        " values (@_id_farmacia, @_nombre, @_telefono, @_domicilio, @_id_ciudad, @_id_propietario)";
+                query = "insert into farmacias (id_farmacia, nombre, telefono," +
+                    " domicilio, id_ciudad, id_propietario)" +
+                        " values (@_id_farmacia, @_nombre, @_telefono, @_domicilio," +
+                        " @_id_ciudad, @_id_propietario)";
                 cmd = new SqlCommand(query, _connection);
                 cmd.Parameters.AddWithValue("@_id_farmacia", _id_farmacia);
                 cmd.Parameters.AddWithValue("@_nombre", _nombre);
@@ -61,13 +62,15 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en farmacias.\n{e.Message}");
+                MessageBox.Show($"Error en farmacias.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void add_medicamentos(int _id_medicamento, string _nombre,
             string _componentes, string _comercial)
         {
@@ -85,13 +88,15 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en medicamentos.\n{e.Message}");
+                MessageBox.Show($"Error en medicamentos.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void add_propietarios(int _id_propietario, string _nombre,
             string _ciudad, string _calle, string _numero_calle, string _cp)
         {
@@ -113,13 +118,15 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en propietarios.\n{e.Message}");
+                MessageBox.Show($"Error en propietarios.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void add_ciudades(int _id_ciudad, string _nombre,
             string _estado, string _superficie, string _poblacion)
         {
@@ -140,13 +147,15 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en ciudades.\n{e.Message}");
+                MessageBox.Show($"Error en ciudades.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void add_clientes(int _id_cliente, string _nombre,
             string _telefono, string _correo, string _calle,
             string _numero_calle, string _cp, string _rfc)
@@ -171,15 +180,17 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en clientes.\n{e.Message}");
+                MessageBox.Show($"Error en clientes.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void add_tickets(int _id_ticket, string _fecha, string _hora,
-            string _costo_total, int _id_cliente, List<int> _id_medicamentos)
+            string _costo_total, int _id_cliente)
         {
             try
             {
@@ -193,70 +204,23 @@ namespace sql_topicos_sc
                 cmd.Parameters.AddWithValue("@costo_total", _costo_total);
                 cmd.Parameters.AddWithValue("@_id_cliente", _id_cliente);
                 cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error en tickets.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
 
-                foreach (var id_medicamento in _id_medicamentos)
-                {
-                    add_detalles_compras(_id_ticket,id_medicamento);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error en tickets.\n{e.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
-        public void add_detalles_medicamentos(int _id_farmacia, List<int> _id_medicamentos)
-        {
-            try
-            {
-                _connection.Open();
-                foreach (int id_medicamento in _id_medicamentos)
-                {
-                    query = "insert into detalles_medicamentos (id_farmacia, id_medicamento)"
-                        + " values (@_id_farmacia, @_id_medicamento)";
-                    cmd = new SqlCommand(query, _connection);
-                    cmd.Parameters.AddWithValue("@_id_farmacia", _id_farmacia);
-                    cmd.Parameters.AddWithValue("@_id_medicamento", id_medicamento);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error en detalles_medicamentos.\n{e.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
-        public void add_detalles_compras(int _id_ticket, int _id_medicamento)
-        {
-            try
-            {
-                _connection.Open();
-                query = "insert into detalles_compras (id_ticket, id_medicamento)"
-                    + " values (@_id_ticket, @_id_medicamento)";
-                cmd = new SqlCommand(query, _connection);
-                cmd.Parameters.AddWithValue("@_id_ticket", _id_ticket);
-                cmd.Parameters.AddWithValue("@_id_medicamento", _id_medicamento);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error en detalles_compras.\n{e.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
 
         //eliminar
-        public void remove_farmacias(int _id_farmacia = -1, string _nombre = null, string _telefono = null,
-    string _domicilio = null, int _id_ciudad = -1, int _id_propietario = -1)
+        public void remove_farmacias(int _id_farmacia = -1, string _nombre = null,
+        string _telefono = null, string _domicilio = null,
+        int _id_ciudad = -1, int _id_propietario = -1)
         {
             try
             {
@@ -286,7 +250,7 @@ namespace sql_topicos_sc
                 {
                     conditions += "id_propietario = @_id_propietario AND ";
                 }
-                conditions = conditions.TrimEnd("AND ".ToCharArray()); // Remove trailing "AND "
+                conditions = conditions.TrimEnd("AND ".ToCharArray());
 
                 query = $"DELETE FROM farmacias WHERE {conditions}";
                 cmd = new SqlCommand(query, _connection);
@@ -319,15 +283,17 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en farmacias.\n{e.Message}");
+                MessageBox.Show($"Error en farmacias.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void remove_medicamentos(int _id_medicamento = -1, string _nombre = null,
-    string _componentes = null, string _comercial = null)
+            string _componentes = null, string _comercial = null)
         {
             try
             {
@@ -349,7 +315,7 @@ namespace sql_topicos_sc
                 {
                     conditions += "comercial = @_comercial AND ";
                 }
-                conditions = conditions.TrimEnd("AND ".ToCharArray()); // Remove trailing "AND "
+                conditions = conditions.TrimEnd("AND ".ToCharArray());
 
                 query = $"DELETE FROM medicamentos WHERE {conditions}";
                 cmd = new SqlCommand(query, _connection);
@@ -374,15 +340,18 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en medicamentos.\n{e.Message}");
+                MessageBox.Show($"Error en medicamentos.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void remove_propietarios(int _id_propietario = -1, string _nombre = null,
-    string _ciudad = null, string _calle = null, string _numero_calle = null, string _cp = null)
+            string _ciudad = null, string _calle = null,
+            string _numero_calle = null, string _cp = null)
         {
             try
             {
@@ -412,7 +381,7 @@ namespace sql_topicos_sc
                 {
                     conditions += "cp = @_cp AND ";
                 }
-                conditions = conditions.TrimEnd("AND ".ToCharArray()); // Remove trailing "AND "
+                conditions = conditions.TrimEnd("AND ".ToCharArray());
 
                 query = $"DELETE FROM propietarios WHERE {conditions}";
                 cmd = new SqlCommand(query, _connection);
@@ -445,15 +414,17 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en propietarios.\n{e.Message}");
+                MessageBox.Show($"Error en propietarios.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void remove_ciudades(int _id_ciudad = -1, string _nombre = null,
-    string _estado = null, string _superficie = null, string _poblacion = null)
+            string _estado = null, string _superficie = null, string _poblacion = null)
         {
             try
             {
@@ -479,7 +450,7 @@ namespace sql_topicos_sc
                 {
                     conditions += "poblacion = @_poblacion AND ";
                 }
-                conditions = conditions.TrimEnd("AND ".ToCharArray()); // Remove trailing "AND "
+                conditions = conditions.TrimEnd("AND ".ToCharArray());
 
                 query = $"DELETE FROM ciudades WHERE {conditions}";
                 cmd = new SqlCommand(query, _connection);
@@ -508,13 +479,15 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en ciudades.\n{e.Message}");
+                MessageBox.Show($"Error en ciudades.\n{e.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void remove_clientes(int _id_cliente = -1, string _nombre = null,
             string _telefono = null, string _correo = null, string _calle = null,
             string _numero_calle = null, string _cp = null, string _rfc = null)
@@ -555,7 +528,7 @@ namespace sql_topicos_sc
                 {
                     conditions += "rfc = @_rfc AND ";
                 }
-                conditions = conditions.TrimEnd("AND ".ToCharArray()); // Remove trailing "AND "
+                conditions = conditions.TrimEnd("AND ".ToCharArray());
 
                 query = $"DELETE FROM clientes WHERE {conditions}";
                 cmd = new SqlCommand(query, _connection);
@@ -596,15 +569,17 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en clientes.\n{e.Message}");
+                MessageBox.Show($"Error en clientes.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void remove_tickets(int _id_ticket = -1, string _fecha = null, string _hora = null,
-            string _costo_total = null, int _id_cliente = -1, List<int> _id_medicamentos = null)
+            string _costo_total = null, int _id_cliente = -1)
         {
             try
             {
@@ -630,7 +605,7 @@ namespace sql_topicos_sc
                 {
                     conditions += "id_cliente = @_id_cliente AND ";
                 }
-                conditions = conditions.TrimEnd("AND ".ToCharArray()); // Remove trailing "AND "
+                conditions = conditions.TrimEnd("AND ".ToCharArray());
 
                 query = $"DELETE FROM tickets WHERE {conditions}";
                 cmd = new SqlCommand(query, _connection);
@@ -656,64 +631,18 @@ namespace sql_topicos_sc
                 }
 
                 cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error en tickets.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
 
-                if (_id_medicamentos != null)
-                {
-                    foreach (var id_medicamento in _id_medicamentos)
-                    {
-                        remove_detalles_compras(_id_ticket, id_medicamento);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error en tickets.\n{e.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
-        public void remove_detalles_compras(int _id_ticket, int _id_medicamento)
-        {
-            try
-            {
-                _connection.Open();
-                query = "DELETE FROM detalles_compras WHERE id_ticket = @_id_ticket AND id_medicamento = @_id_medicamento";
-                cmd = new SqlCommand(query, _connection);
-                cmd.Parameters.AddWithValue("@_id_ticket", _id_ticket);
-                cmd.Parameters.AddWithValue("@_id_medicamento", _id_medicamento);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error en detalles_compras.\n{e.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
-        public void remove_detalles_medicamentos(int _id_ticket, int _id_medicamento)
-        {
-            try
-            {
-                _connection.Open();
-                query = "DELETE FROM detalles_medicamentos WHERE id_ticket = @_id_ticket AND id_medicamento = @_id_medicamento";
-                cmd = new SqlCommand(query, _connection);
-                cmd.Parameters.AddWithValue("@_id_ticket", _id_ticket);
-                cmd.Parameters.AddWithValue("@_id_medicamento", _id_medicamento);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error en detalles_medicamentos.\n{e.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
 
         //modificar
         public void modify_farmacias(int _id_farmacia, string _nombre, string _telefono,
@@ -730,7 +659,8 @@ namespace sql_topicos_sc
                     int count = (int)cmd.ExecuteScalar();
                     if (count == 0)
                     {
-                        Console.WriteLine("La farmacia con el ID especificado no existe.");
+                        MessageBox.Show("La farmacia con el ID especificado no existe.",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -740,7 +670,8 @@ namespace sql_topicos_sc
                 }
                 else
                 {
-                    Console.WriteLine("Ingrese un ID de la farmacia para realizar la modificación.");
+                    MessageBox.Show("Ingrese un ID de la farmacia para realizar la modificación.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -755,15 +686,17 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en farmacias.\n{e.Message}");
+                MessageBox.Show($"Error en farmacias.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void modify_medicamentos(int _id_medicamento, string _nombre,
-    string _componentes, string _comercial)
+            string _componentes, string _comercial)
         {
             try
             {
@@ -775,7 +708,8 @@ namespace sql_topicos_sc
                 }
                 else
                 {
-                    Console.WriteLine("Falta el ID del medicamento para realizar la modificación.");
+                    MessageBox.Show("Falta el ID del medicamento para realizar la modificación.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -788,7 +722,8 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en medicamentos.\n{e.Message}");
+                MessageBox.Show($"Error en medicamentos.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -810,7 +745,8 @@ namespace sql_topicos_sc
                 }
                 else
                 {
-                    Console.WriteLine("Falta el ID del propietario para realizar la modificación.");
+                    MessageBox.Show("Falta el ID del propietario para realizar la modificación.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -825,7 +761,8 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en propietarios.\n{e.Message}");
+                MessageBox.Show($"Error en propietarios.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -847,7 +784,8 @@ namespace sql_topicos_sc
                 }
                 else
                 {
-                    Console.WriteLine("Falta el ID de la ciudad para realizar la modificación.");
+                    MessageBox.Show("Falta el ID de la ciudad para realizar la modificación.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -861,7 +799,8 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en ciudades.\n{e.Message}");
+                MessageBox.Show($"Error en ciudades.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -884,7 +823,8 @@ namespace sql_topicos_sc
                 }
                 else
                 {
-                    Console.WriteLine("Falta el ID del cliente para realizar la modificación.");
+                    MessageBox.Show("Falta el ID del cliente para realizar la modificación.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -901,7 +841,8 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en clientes.\n{e.Message}");
+                MessageBox.Show($"Error en clientes.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -910,7 +851,7 @@ namespace sql_topicos_sc
         }
 
         public void modify_tickets(int _id_ticket, string _fecha, string _hora,
-            string _costo_total, int _id_cliente, List<int> _id_medicamentos)
+            string _costo_total, int _id_cliente)
         {
             try
             {
@@ -923,7 +864,8 @@ namespace sql_topicos_sc
                 }
                 else
                 {
-                    Console.WriteLine("Falta el ID del ticket para realizar la modificación.");
+                    MessageBox.Show("Falta el ID del ticket para realizar la modificación.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -935,27 +877,22 @@ namespace sql_topicos_sc
                 cmd.Parameters.AddWithValue("@_id_cliente", _id_cliente);
                 cmd.ExecuteNonQuery();
 
-                // Limpiar los detalles de las compras existentes
                 query = "DELETE FROM detalles_compras WHERE id_ticket = @_id_ticket";
                 cmd = new SqlCommand(query, _connection);
                 cmd.Parameters.AddWithValue("@_id_ticket", _id_ticket);
                 cmd.ExecuteNonQuery();
-
-                // Insertar los nuevos detalles de las compras
-                foreach (var id_medicamento in _id_medicamentos)
-                {
-                    add_detalles_compras(_id_ticket, id_medicamento);
-                }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en tickets.\n{e.Message}");
+                MessageBox.Show($"Error en tickets.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
 
 
         //consultar
@@ -977,92 +914,154 @@ namespace sql_topicos_sc
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en farmacias.\n{e.Message}");
+                MessageBox.Show($"Error en farmacias.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void see_medicamentos()
         {
             try
             {
+                mainForm mainForm = new mainForm();
+                mainForm.Show();
+
                 _connection.Open();
-                
+                query = "select * from medicamentos";
+                adapter = new SqlDataAdapter(query, _connection);
+                dataTable = new DataTable();
+                adapter.Fill(dataTable);
+                reader = new readerGrid(mainForm);
+                reader.DataSource = dataTable;
+                mainForm.Controls.Add(reader);
+
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en medicamentos.\n{e.Message}");
+                MessageBox.Show($"Error en medicamentos.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void see_propietarios()
         {
             try
             {
+                mainForm mainForm = new mainForm();
+                mainForm.Show();
+
                 _connection.Open();
-                
+                query = "select * from propietarios";
+                adapter = new SqlDataAdapter(query, _connection);
+                dataTable = new DataTable();
+                adapter.Fill(dataTable);
+                reader = new readerGrid(mainForm);
+                reader.DataSource = dataTable;
+                mainForm.Controls.Add(reader);
+
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en propietarios.\n{e.Message}");
+                MessageBox.Show($"Error en propietarios.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void see_ciudades()
         {
             try
             {
+                mainForm mainForm = new mainForm();
+                mainForm.Show();
+
                 _connection.Open();
-                
+                query = "select * from ciudades";
+                adapter = new SqlDataAdapter(query, _connection);
+                dataTable = new DataTable();
+                adapter.Fill(dataTable);
+                reader = new readerGrid(mainForm);
+                reader.DataSource = dataTable;
+                mainForm.Controls.Add(reader);
+
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en ciudades.\n{e.Message}");
+                MessageBox.Show($"Error en ciudades.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void see_clientes()
         {
             try
             {
+                mainForm mainForm = new mainForm();
+                mainForm.Show();
+
                 _connection.Open();
-                
+                query = "select * from clientes";
+                adapter = new SqlDataAdapter(query, _connection);
+                dataTable = new DataTable();
+                adapter.Fill(dataTable);
+                reader = new readerGrid(mainForm);
+                reader.DataSource = dataTable;
+                mainForm.Controls.Add(reader);
+
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en clientes.\n{e.Message}");
+                MessageBox.Show($"Error en clientes.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
         public void see_tickets()
         {
             try
             {
+                mainForm mainForm = new mainForm();
+                mainForm.Show();
+
                 _connection.Open();
-                
+                query = "select * from tickets";
+                adapter = new SqlDataAdapter(query, _connection);
+                dataTable = new DataTable();
+                adapter.Fill(dataTable);
+                reader = new readerGrid(mainForm);
+                reader.DataSource = dataTable;
+                mainForm.Controls.Add(reader);
+
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error en tickets.\n{e.Message}");
+                MessageBox.Show($"Error en tickets.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _connection.Close();
             }
         }
+
     }
 }
