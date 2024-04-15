@@ -13,7 +13,7 @@ namespace sql_topicos_sc
     {
         private static mainForm mn = new mainForm();
 
-        private groups menuinicial_ = new groups(mn);
+        private readonly groups menuinicial_ = new groups(mn);
         private groups farmacias_ = new groups(mn);
         private groups medicamentos_ = new groups(mn);
         private groups propietarios_ = new groups(mn);
@@ -53,6 +53,10 @@ namespace sql_topicos_sc
         }
         public void menuinicial()
         {
+            ShowControlText title = new ShowControlText(10);
+            title.Text = "Menú";
+            menuinicial_.Controls.Add(title);
+
             roundButton b_farmacias = new roundButton();
             roundButton b_medicamentos = new roundButton();
             roundButton b_propietarios = new roundButton();
@@ -89,6 +93,10 @@ namespace sql_topicos_sc
         }
         public void farmacias()
         {
+            ShowControlText title = new ShowControlText(10);
+            title.Text = "Farmacias";
+            farmacias_.Controls.Add(title);
+
             ShowControlText SCT_id_farmacia = new ShowControlText();
             inserterText IT_id_farmacia = new inserterText();
             ShowControlText SCT_nombre = new ShowControlText();
@@ -124,32 +132,79 @@ namespace sql_topicos_sc
 
             b_altas = new roundButton();
             b_altas.Click += (sender, e) => {
-                datamethods.Instance.add_farmacias(int.Parse(IT_id_farmacia.Text),
-                IT_nombre.Text, IT_telefono.Text,
-                IT_domicilio.Text, int.Parse(IT_id_ciudad.Text),
-                int.Parse(IT_id_propietario.Text));
+                try
+                {
+                    datamethods.Instance.add_farmacias(int.Parse(IT_id_farmacia.Text),
+                    IT_nombre.Text, IT_telefono.Text,
+                    IT_domicilio.Text, int.Parse(IT_id_ciudad.Text),
+                    int.Parse(IT_id_propietario.Text));
+                    IT_id_farmacia.Clear();
+                    IT_nombre.Clear();
+                    IT_telefono.Clear();
+                    IT_domicilio.Clear();
+                    IT_id_ciudad.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_altas.Text = "Alta";
             farmacias_.Controls.Add(b_altas);
             b_bajas = new roundButton();
             b_bajas.Click += (sender, e) => {
-                datamethods.Instance.remove_farmacias(int.Parse(IT_id_farmacia.Text),
-                IT_nombre.Text, IT_telefono.Text, IT_domicilio.Text,
-                int.Parse(IT_id_ciudad.Text), int.Parse(IT_id_propietario.Text));
+                try
+                {
+                    datamethods.Instance.remove_farmacias(int.Parse(IT_id_farmacia.Text),
+                    IT_nombre.Text, IT_telefono.Text, IT_domicilio.Text,
+                    int.Parse(IT_id_ciudad.Text), int.Parse(IT_id_propietario.Text));
+                    IT_id_farmacia.Clear();
+                    IT_nombre.Clear();
+                    IT_telefono.Clear();
+                    IT_domicilio.Clear();
+                    IT_id_ciudad.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_bajas.Text = "Baja";
             farmacias_.Controls.Add(b_bajas);
             b_modificar = new roundButton();
             b_modificar.Click += (sender, e) => {
-                datamethods.Instance.modify_farmacias(int.Parse(IT_id_farmacia.Text),
-                IT_nombre.Text, IT_telefono.Text, IT_domicilio.Text,
-                int.Parse(IT_id_ciudad.Text), int.Parse(IT_id_propietario.Text));
+                try
+                {
+                    datamethods.Instance.modify_farmacias(int.Parse(IT_id_farmacia.Text),
+                    IT_nombre.Text, IT_telefono.Text, IT_domicilio.Text,
+                    int.Parse(IT_id_ciudad.Text), int.Parse(IT_id_propietario.Text));
+                    IT_id_farmacia.Clear();
+                    IT_nombre.Clear();
+                    IT_telefono.Clear();
+                    IT_domicilio.Clear();
+                    IT_id_ciudad.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_modificar.Text = "Modificar";
             farmacias_.Controls.Add(b_modificar);
             b_consultar = new roundButton();
             b_consultar.Click += (sender, e) => {
-                datamethods.Instance.see_farmacias();
+                try
+                {
+                    datamethods.Instance.see_farmacias();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_consultar.Text = "Consultar";
             farmacias_.Controls.Add(b_consultar);
@@ -167,6 +222,9 @@ namespace sql_topicos_sc
 
         public void medicamentos()
         {
+            ShowControlText title = new ShowControlText(10);
+            title.Text = "Medicamentos";
+            medicamentos_.Controls.Add(title);
             ShowControlText SCT_id_medicamento = new ShowControlText();
             inserterText IT_id_medicamento = new inserterText();
             ShowControlText SCT_nombre = new ShowControlText();
@@ -182,38 +240,85 @@ namespace sql_topicos_sc
             SCT_comercial.Text = "comercial";
 
             medicamentos_.Controls.Add(SCT_id_medicamento);
-            medicamentos_.Controls.Add(SCT_nombre);
-            medicamentos_.Controls.Add(SCT_componentes);
-            medicamentos_.Controls.Add(SCT_comercial);
             medicamentos_.Controls.Add(IT_id_medicamento);
+            medicamentos_.Controls.Add(SCT_nombre);
             medicamentos_.Controls.Add(IT_nombre);
+            medicamentos_.Controls.Add(SCT_componentes);
             medicamentos_.Controls.Add(IT_componentes);
+            medicamentos_.Controls.Add(SCT_comercial);
             medicamentos_.Controls.Add(IT_comercial);
 
             b_altas = new roundButton();
-            b_altas.Click += (sender,e) => {
-                datamethods.Instance.add_medicamentos(int.Parse(IT_id_medicamento.Text), IT_nombre.Text,
-                IT_componentes.Text, IT_comercial.Text);
+            b_altas.Click += (sender, e) => {
+                try
+                {
+                    datamethods.Instance.add_medicamentos(int.Parse(IT_id_medicamento.Text), IT_nombre.Text,
+                    IT_componentes.Text, IT_comercial.Text);
+                    IT_id_medicamento.Clear();
+                    IT_nombre.Clear();
+                    IT_componentes.Clear();
+                    IT_comercial.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
             };
             b_altas.Text = "Alta";
             medicamentos_.Controls.Add(b_altas);
+
             b_bajas = new roundButton();
             b_bajas.Click += (sender, e) => {
-                datamethods.Instance.remove_medicamentos(int.Parse(IT_id_medicamento.Text),
-                IT_nombre.Text, IT_componentes.Text, IT_comercial.Text);
+                try
+                {
+                    datamethods.Instance.remove_medicamentos(int.Parse(IT_id_medicamento.Text),
+                    IT_nombre.Text, IT_componentes.Text, IT_comercial.Text);
+                    IT_id_medicamento.Clear();
+                    IT_nombre.Clear();
+                    IT_componentes.Clear();
+                    IT_comercial.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_bajas.Text = "Baja";
             medicamentos_.Controls.Add(b_bajas);
+
             b_modificar = new roundButton();
             b_modificar.Click += (sender, e) => {
-                datamethods.Instance.modify_medicamentos(int.Parse(IT_id_medicamento.Text),
-                IT_nombre.Text, IT_componentes.Text, IT_comercial.Text);
+                try
+                {
+                    datamethods.Instance.modify_medicamentos(int.Parse(IT_id_medicamento.Text),
+                    IT_nombre.Text, IT_componentes.Text, IT_comercial.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_modificar.Text = "Modificar";
             medicamentos_.Controls.Add(b_modificar);
+
             b_consultar = new roundButton();
             b_consultar.Click += (sender, e) => {
-                datamethods.Instance.see_medicamentos();
+                try
+                {
+                    datamethods.Instance.see_medicamentos();
+                    IT_id_medicamento.Clear();
+                    IT_nombre.Clear();
+                    IT_componentes.Clear();
+                    IT_comercial.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_consultar.Text = "Consultar";
             medicamentos_.Controls.Add(b_consultar);
@@ -230,6 +335,10 @@ namespace sql_topicos_sc
 
         public void propietarios()
         {
+            ShowControlText title = new ShowControlText(10);
+            title.Text = "Propietarios";
+            propietarios_.Controls.Add(title);
+
             ShowControlText SCT_id_propietario = new ShowControlText();
             inserterText IT_id_propietario = new inserterText();
             ShowControlText SCT_nombre = new ShowControlText();
@@ -251,42 +360,95 @@ namespace sql_topicos_sc
             SCT_cp.Text = "código postal";
 
             propietarios_.Controls.Add(SCT_id_propietario);
-            propietarios_.Controls.Add(SCT_nombre);
-            propietarios_.Controls.Add(SCT_ciudad);
-            propietarios_.Controls.Add(SCT_calle);
-            propietarios_.Controls.Add(SCT_numero_calle);
-            propietarios_.Controls.Add(SCT_cp);
             propietarios_.Controls.Add(IT_id_propietario);
+            propietarios_.Controls.Add(SCT_nombre);
             propietarios_.Controls.Add(IT_nombre);
+            propietarios_.Controls.Add(SCT_ciudad);
             propietarios_.Controls.Add(IT_ciudad);
+            propietarios_.Controls.Add(SCT_calle);
             propietarios_.Controls.Add(IT_calle);
+            propietarios_.Controls.Add(SCT_numero_calle);
             propietarios_.Controls.Add(IT_numero_calle);
+            propietarios_.Controls.Add(SCT_cp);
             propietarios_.Controls.Add(IT_cp);
 
             b_altas = new roundButton();
-            b_altas.Click += (sender,e) => {
-                datamethods.Instance.add_propietarios(int.Parse(IT_id_propietario.Text),
-                IT_nombre.Text, IT_ciudad.Text, IT_calle.Text, IT_numero_calle.Text, IT_cp.Text);
-                };
+            b_altas.Click += (sender, e) => {
+                try
+                {
+                    datamethods.Instance.add_propietarios(int.Parse(IT_id_propietario.Text),
+                    IT_nombre.Text, IT_ciudad.Text, IT_calle.Text, IT_numero_calle.Text, IT_cp.Text);
+                    IT_id_propietario.Clear();
+                    IT_nombre.Clear();
+                    IT_ciudad.Clear();
+                    IT_calle.Clear();
+                    IT_numero_calle.Clear();
+                    IT_cp.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
             b_altas.Text = "Alta";
             propietarios_.Controls.Add(b_altas);
+
             b_bajas = new roundButton();
             b_bajas.Click += (sender, e) => {
-                datamethods.Instance.remove_propietarios(int.Parse(IT_id_propietario.Text),
-        IT_nombre.Text, IT_ciudad.Text, IT_calle.Text, IT_numero_calle.Text, IT_cp.Text);
+                try
+                {
+                    datamethods.Instance.remove_propietarios(int.Parse(IT_id_propietario.Text),
+                    IT_nombre.Text, IT_ciudad.Text, IT_calle.Text, IT_numero_calle.Text, IT_cp.Text);
+                    IT_id_propietario.Clear();
+                    IT_nombre.Clear();
+                    IT_ciudad.Clear();
+                    IT_calle.Clear();
+                    IT_numero_calle.Clear();
+                    IT_cp.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_bajas.Text = "Baja";
             propietarios_.Controls.Add(b_bajas);
+
             b_modificar = new roundButton();
             b_modificar.Click += (sender, e) => {
-                datamethods.Instance.modify_propietarios(int.Parse(IT_id_propietario.Text),
-                IT_nombre.Text, IT_ciudad.Text, IT_calle.Text, IT_numero_calle.Text, IT_cp.Text);
+                try
+                {
+                    datamethods.Instance.modify_propietarios(int.Parse(IT_id_propietario.Text),
+                    IT_nombre.Text, IT_ciudad.Text, IT_calle.Text, IT_numero_calle.Text, IT_cp.Text);
+                    IT_id_propietario.Clear();
+                    IT_nombre.Clear();
+                    IT_ciudad.Clear();
+                    IT_calle.Clear();
+                    IT_numero_calle.Clear();
+                    IT_cp.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_modificar.Text = "Modificar";
             propietarios_.Controls.Add(b_modificar);
+
             b_consultar = new roundButton();
             b_consultar.Click += (sender, e) => {
-                datamethods.Instance.see_propietarios();
+                try
+                {
+                    datamethods.Instance.see_propietarios();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_consultar.Text = "Consultar";
             propietarios_.Controls.Add(b_consultar);
@@ -303,6 +465,10 @@ namespace sql_topicos_sc
 
         public void ciudades()
         {
+            ShowControlText title = new ShowControlText(10);
+            title.Text = "Ciudades";
+            ciudades_.Controls.Add(title);
+
             ShowControlText SCT_id_ciudad = new ShowControlText();
             inserterText IT_id_ciudad = new inserterText();
             ShowControlText SCT_nombre = new ShowControlText();
@@ -321,40 +487,90 @@ namespace sql_topicos_sc
             SCT_poblacion.Text = "población";
 
             ciudades_.Controls.Add(SCT_id_ciudad);
-            ciudades_.Controls.Add(SCT_nombre);
-            ciudades_.Controls.Add(SCT_estado);
-            ciudades_.Controls.Add(SCT_superficie);
-            ciudades_.Controls.Add(SCT_poblacion);
             ciudades_.Controls.Add(IT_id_ciudad);
+            ciudades_.Controls.Add(SCT_nombre);
             ciudades_.Controls.Add(IT_nombre);
+            ciudades_.Controls.Add(SCT_estado);
             ciudades_.Controls.Add(IT_estado);
+            ciudades_.Controls.Add(SCT_superficie);
             ciudades_.Controls.Add(IT_superficie);
+            ciudades_.Controls.Add(SCT_poblacion);
             ciudades_.Controls.Add(IT_poblacion);
 
             b_altas = new roundButton();
             b_altas.Click += (sender, e) => {
-                datamethods.Instance.add_ciudades(int.Parse(IT_id_ciudad.Text),IT_nombre.Text,
-                    IT_estado.Text,IT_superficie.Text,IT_poblacion.Text);
+                try
+                {
+                    datamethods.Instance.add_ciudades(int.Parse(IT_id_ciudad.Text), IT_nombre.Text,
+                    IT_estado.Text, IT_superficie.Text, IT_poblacion.Text);
+                    IT_id_ciudad.Clear();
+                    IT_nombre.Clear();
+                    IT_estado.Clear();
+                    IT_superficie.Clear();
+                    IT_poblacion.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_altas.Text = "Alta";
             ciudades_.Controls.Add(b_altas);
+
             b_bajas = new roundButton();
             b_bajas.Click += (sender, e) => {
-                datamethods.Instance.remove_ciudades(int.Parse(IT_id_ciudad.Text),
-                IT_nombre.Text, IT_estado.Text, IT_superficie.Text, IT_poblacion.Text);
+                try
+                {
+                    datamethods.Instance.remove_ciudades(int.Parse(IT_id_ciudad.Text),
+                    IT_nombre.Text, IT_estado.Text, IT_superficie.Text, IT_poblacion.Text);
+                    IT_id_ciudad.Clear();
+                    IT_nombre.Clear();
+                    IT_estado.Clear();
+                    IT_superficie.Clear();
+                    IT_poblacion.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_bajas.Text = "Baja";
             ciudades_.Controls.Add(b_bajas);
+
             b_modificar = new roundButton();
             b_modificar.Click += (sender, e) => {
-                datamethods.Instance.modify_ciudades(int.Parse(IT_id_ciudad.Text),
-                IT_nombre.Text, IT_estado.Text, IT_superficie.Text, IT_poblacion.Text);
+                try
+                {
+                    datamethods.Instance.modify_ciudades(int.Parse(IT_id_ciudad.Text),
+                    IT_nombre.Text, IT_estado.Text, IT_superficie.Text, IT_poblacion.Text);
+                    IT_id_ciudad.Clear();
+                    IT_nombre.Clear();
+                    IT_estado.Clear();
+                    IT_superficie.Clear();
+                    IT_poblacion.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_modificar.Text = "Modificar";
             ciudades_.Controls.Add(b_modificar);
+
             b_consultar = new roundButton();
             b_consultar.Click += (sender, e) => {
-                datamethods.Instance.see_ciudades();
+                try
+                {
+                    datamethods.Instance.see_ciudades();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_consultar.Text = "Consultar";
             ciudades_.Controls.Add(b_consultar);
@@ -363,6 +579,7 @@ namespace sql_topicos_sc
             b_menu_inicial.Click += (sender, e) => { visibility("menuinicial"); };
             b_menu_inicial.Text = "Menú";
             ciudades_.Controls.Add(b_menu_inicial);
+
             b_Salir = new roundButton();
             b_Salir.Click += (sender, e) => { Application.Exit(); };
             b_Salir.Text = "Salir";
@@ -371,6 +588,10 @@ namespace sql_topicos_sc
 
         public void clientes()
         {
+            ShowControlText title = new ShowControlText(10);
+            title.Text = "Clientes";
+            clientes_.Controls.Add(title);
+
             ShowControlText SCT_id_cliente = new ShowControlText();
             inserterText IT_id_cliente = new inserterText();
             ShowControlText SCT_nombre = new ShowControlText();
@@ -398,52 +619,108 @@ namespace sql_topicos_sc
             SCT_rfc.Text = "RFC";
 
             clientes_.Controls.Add(SCT_id_cliente);
-            clientes_.Controls.Add(SCT_nombre);
-            clientes_.Controls.Add(SCT_telefono);
-            clientes_.Controls.Add(SCT_correo);
-            clientes_.Controls.Add(SCT_calle);
-            clientes_.Controls.Add(SCT_numero_calle);
-            clientes_.Controls.Add(SCT_cp);
-            clientes_.Controls.Add(SCT_rfc);
             clientes_.Controls.Add(IT_id_cliente);
+            clientes_.Controls.Add(SCT_nombre);
             clientes_.Controls.Add(IT_nombre);
+            clientes_.Controls.Add(SCT_telefono);
             clientes_.Controls.Add(IT_telefono);
+            clientes_.Controls.Add(SCT_correo);
             clientes_.Controls.Add(IT_correo);
+            clientes_.Controls.Add(SCT_calle);
             clientes_.Controls.Add(IT_calle);
+            clientes_.Controls.Add(SCT_numero_calle);
             clientes_.Controls.Add(IT_numero_calle);
+            clientes_.Controls.Add(SCT_cp);
             clientes_.Controls.Add(IT_cp);
+            clientes_.Controls.Add(SCT_rfc);
             clientes_.Controls.Add(IT_rfc);
 
             b_altas = new roundButton();
-            b_altas.Click += (sender,e) => {
-                datamethods.Instance.add_clientes(int.Parse(IT_id_cliente.Text), IT_nombre.Text, 
-                IT_telefono.Text, IT_correo.Text, IT_calle.Text,
-                IT_numero_calle.Text, IT_cp.Text, IT_rfc.Text);
+            b_altas.Click += (sender, e) => {
+                try
+                {
+                    datamethods.Instance.add_clientes(int.Parse(IT_id_cliente.Text), IT_nombre.Text,
+                        IT_telefono.Text, IT_correo.Text, IT_calle.Text,
+                        IT_numero_calle.Text, IT_cp.Text, IT_rfc.Text);
+                    IT_id_cliente.Clear();
+                    IT_nombre.Clear();
+                    IT_telefono.Clear();
+                    IT_correo.Clear();
+                    IT_calle.Clear();
+                    IT_numero_calle.Clear();
+                    IT_cp.Clear();
+                    IT_rfc.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_altas.Text = "Alta";
             clientes_.Controls.Add(b_altas);
+
             b_bajas = new roundButton();
-            b_bajas.Click += (sender, e) =>
-            {
-                datamethods.Instance.remove_clientes(int.Parse(IT_id_cliente.Text), IT_nombre.Text,
-                IT_telefono.Text, IT_correo.Text, IT_calle.Text, IT_numero_calle.Text,
-                IT_cp.Text, IT_rfc.Text);
+            b_bajas.Click += (sender, e) => {
+                try
+                {
+                    datamethods.Instance.remove_clientes(int.Parse(IT_id_cliente.Text), IT_nombre.Text,
+                        IT_telefono.Text, IT_correo.Text, IT_calle.Text, IT_numero_calle.Text,
+                        IT_cp.Text, IT_rfc.Text);
+                    IT_id_cliente.Clear();
+                    IT_nombre.Clear();
+                    IT_telefono.Clear();
+                    IT_correo.Clear();
+                    IT_calle.Clear();
+                    IT_numero_calle.Clear();
+                    IT_cp.Clear();
+                    IT_rfc.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
-                b_bajas.Text = "Baja";
+            b_bajas.Text = "Baja";
             clientes_.Controls.Add(b_bajas);
+
             b_modificar = new roundButton();
-            b_modificar.Click += (sender, e) =>
-            {
-                datamethods.Instance.modify_clientes(int.Parse(IT_id_cliente.Text), IT_nombre.Text,
-                IT_telefono.Text, IT_correo.Text, IT_calle.Text, IT_numero_calle.Text,
-                IT_cp.Text, IT_rfc.Text);
+            b_modificar.Click += (sender, e) => {
+                try
+                {
+                    datamethods.Instance.modify_clientes(int.Parse(IT_id_cliente.Text), IT_nombre.Text,
+                        IT_telefono.Text, IT_correo.Text, IT_calle.Text, IT_numero_calle.Text,
+                        IT_cp.Text, IT_rfc.Text);
+                    IT_id_cliente.Clear();
+                    IT_nombre.Clear();
+                    IT_telefono.Clear();
+                    IT_correo.Clear();
+                    IT_calle.Clear();
+                    IT_numero_calle.Clear();
+                    IT_cp.Clear();
+                    IT_rfc.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_modificar.Text = "Modificar";
             clientes_.Controls.Add(b_modificar);
+
             b_consultar = new roundButton();
-            b_consultar.Click += (sender, e) =>
-            {
-                datamethods.Instance.see_clientes();
+            b_consultar.Click += (sender, e) => {
+                try
+                {
+                    datamethods.Instance.see_clientes();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_consultar.Text = "Consultar";
             clientes_.Controls.Add(b_consultar);
@@ -452,6 +729,7 @@ namespace sql_topicos_sc
             b_menu_inicial.Click += (sender, e) => { visibility("menuinicial"); };
             b_menu_inicial.Text = "Menú";
             clientes_.Controls.Add(b_menu_inicial);
+
             b_Salir = new roundButton();
             b_Salir.Click += (sender, e) => { Application.Exit(); };
             b_Salir.Text = "Salir";
@@ -460,6 +738,10 @@ namespace sql_topicos_sc
 
         public void tickets()
         {
+            ShowControlText title = new ShowControlText(10);
+            title.Text = "Tickets";
+            tickets_.Controls.Add(title);
+
             ShowControlText SCT_id_ticket = new ShowControlText();
             inserterText IT_id_ticket = new inserterText();
             ShowControlText SCT_fecha = new ShowControlText();
@@ -471,31 +753,97 @@ namespace sql_topicos_sc
             ShowControlText SCT_id_cliente = new ShowControlText();
             inserterText IT_id_cliente = new inserterText();
 
-            List<int> id_medicamentos = new List<int>();
+            SCT_id_ticket.Text = "identificador";
+            SCT_fecha.Text = "fecha";
+            SCT_hora.Text = "hora";
+            SCT_costo_total.Text = "costo total";
+            SCT_id_cliente.Text = "cliente";
+
+            tickets_.Controls.Add(SCT_id_ticket);
+            tickets_.Controls.Add(IT_id_ticket);
+            tickets_.Controls.Add(SCT_fecha);
+            tickets_.Controls.Add(IT_fecha);
+            tickets_.Controls.Add(SCT_hora);
+            tickets_.Controls.Add(IT_hora);
+            tickets_.Controls.Add(SCT_costo_total);
+            tickets_.Controls.Add(IT_costo_total);
+            tickets_.Controls.Add(SCT_id_cliente);
+            tickets_.Controls.Add(IT_id_cliente);
+
             b_altas = new roundButton();
-            b_altas.Click += (sender,e) => {
-                datamethods.Instance.add_tickets(int.Parse(IT_id_ticket.Text), IT_fecha.Text,
-                    IT_hora.Text, IT_costo_total.Text, int.Parse(IT_id_cliente.Text),id_medicamentos);
+            b_altas.Click += (sender, e) => {
+                try
+                {
+                    datamethods.Instance.add_tickets(int.Parse(IT_id_ticket.Text), IT_fecha.Text,
+                        IT_hora.Text, IT_costo_total.Text, int.Parse(IT_id_cliente.Text));
+                    IT_id_ticket.Clear();
+                    IT_fecha.Clear();
+                    IT_hora.Clear();
+                    IT_costo_total.Clear();
+                    IT_id_cliente.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_altas.Text = "Alta";
             tickets_.Controls.Add(b_altas);
+
             b_bajas = new roundButton();
             b_bajas.Click += (sender, e) => {
-                datamethods.Instance.remove_tickets(int.Parse(IT_id_ticket.Text), IT_fecha.Text,
-                    IT_hora.Text, IT_costo_total.Text, int.Parse(IT_id_cliente.Text), id_medicamentos);
+                try
+                {
+                    datamethods.Instance.remove_tickets(int.Parse(IT_id_ticket.Text), IT_fecha.Text,
+                        IT_hora.Text, IT_costo_total.Text, int.Parse(IT_id_cliente.Text));
+                    IT_id_ticket.Clear();
+                    IT_fecha.Clear();
+                    IT_hora.Clear();
+                    IT_costo_total.Clear();
+                    IT_id_cliente.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_bajas.Text = "Baja";
             tickets_.Controls.Add(b_bajas);
+
             b_modificar = new roundButton();
             b_modificar.Click += (sender, e) => {
-                datamethods.Instance.modify_tickets(int.Parse(IT_id_ticket.Text), IT_fecha.Text,
-                    IT_hora.Text, IT_costo_total.Text, int.Parse(IT_id_cliente.Text), id_medicamentos);
+                try
+                {
+                    datamethods.Instance.modify_tickets(int.Parse(IT_id_ticket.Text), IT_fecha.Text,
+                        IT_hora.Text, IT_costo_total.Text, int.Parse(IT_id_cliente.Text));
+                    IT_id_ticket.Clear();
+                    IT_fecha.Clear();
+                    IT_hora.Clear();
+                    IT_costo_total.Clear();
+                    IT_id_cliente.Clear();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_modificar.Text = "Modificar";
             tickets_.Controls.Add(b_modificar);
+
             b_consultar = new roundButton();
             b_consultar.Click += (sender, e) => {
-                datamethods.Instance.see_tickets();
+                try
+                {
+                    datamethods.Instance.see_tickets();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
             b_consultar.Text = "Consultar";
             tickets_.Controls.Add(b_consultar);
@@ -504,11 +852,13 @@ namespace sql_topicos_sc
             b_menu_inicial.Click += (sender, e) => { visibility("menuinicial"); };
             b_menu_inicial.Text = "Menú";
             tickets_.Controls.Add(b_menu_inicial);
+
             b_Salir = new roundButton();
             b_Salir.Click += (sender, e) => { Application.Exit(); };
             b_Salir.Text = "Salir";
             tickets_.Controls.Add(b_Salir);
         }
+
 
         public void visibility(string tableName)
         {
