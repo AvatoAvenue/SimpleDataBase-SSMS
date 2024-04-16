@@ -184,11 +184,15 @@ namespace sql_topicos_sc
         //texto para aclaraciones
         public class ShowControlText : Label
         {
-            private int diameter = 20;
+            private int diameter = 30;
             private Color textColor = Color.FromArgb(255, 255, 255);
             private Color backColor = Color.Black;
             public ShowControlText(int d = 30)
             {
+                this.Size = new Size(100, 40);
+                this.FlatStyle = FlatStyle.Flat;
+                this.TextAlign = ContentAlignment.MiddleCenter;
+
                 this.diameter = d;
                 this.ForeColor = textColor;
                 this.BackColor = backColor;
