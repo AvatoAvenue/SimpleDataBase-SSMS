@@ -15,28 +15,53 @@ namespace sql_topicos_sc
         //formulario base
         public class mainForm : Form
         {
+            private Color formColor = Color.Black;
+
             public mainForm()
             {
                 this.WindowState = FormWindowState.Maximized;
-                this.MinimumSize = new Size(1280, 720);
-                this.BackColor = Color.Black;
+                this.MinimumSize = new Size(1080, 720);
+                this.BackColor = formColor;
+                this.DoubleBuffered = true;
             }
+
         }
         //grupo de botones, labels y comboboxes
         public class groups : TableLayoutPanel
         {
+            private int diameter = 30;
             private mainForm parentForm;
+            private Color group = Color.DarkGray;
             public groups(mainForm form)
             {
-                this.parentForm = form;
-                this.Dock = DockStyle.None;
-                this.Size = parentForm.ClientSize;
-                this.parentForm.SizeChanged += MainForm_SizeChanged;
-            }
+                this.BackColor = group;
 
+                this.parentForm = form;
+                this.parentForm.SizeChanged += MainForm_SizeChanged;
+
+                this.Dock = DockStyle.None;
+                this.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+                this.AutoScroll = true;
+                this.Padding = new Padding(10);
+            }
             private void MainForm_SizeChanged(object sender, EventArgs e)
             {
                 this.Size = parentForm.ClientSize;
+            }
+            protected override void OnPaint(PaintEventArgs pevent)
+            {
+                base.OnPaint(pevent);
+
+                GraphicsPath path = new GraphicsPath();
+                Rectangle rectangulo = new Rectangle(0, 0, diameter, diameter);
+                path.AddArc(rectangulo, 180, 90);
+                rectangulo.X = this.Width - diameter;
+                path.AddArc(rectangulo, 270, 90);
+                rectangulo.Y = this.Height - diameter;
+                path.AddArc(rectangulo, 0, 90);
+                rectangulo.X = 0;
+                path.AddArc(rectangulo, 90, 90);
+                this.Region = new Region(path);
             }
         }
         //botón
@@ -58,10 +83,13 @@ namespace sql_topicos_sc
                 this.FlatStyle = FlatStyle.Flat;
                 this.FlatAppearance.BorderSize = 0;
                 this.TextAlign = ContentAlignment.MiddleCenter;
-                this.AutoSize = true;
                 this.BackColor = normalColor;
                 this.ForeColor = textColor;
                 this.Font = new Font(this.Font, FontStyle.Bold);
+                this.Dock = DockStyle.None;
+                this.Anchor = AnchorStyles.None;
+
+                this.Margin = new Padding(5);
 
                 originalSize = this.Size;
                 targetSize = this.Size + expansion;
@@ -148,18 +176,43 @@ namespace sql_topicos_sc
         {
             public inserterText()
             {
-
+                this.Dock = DockStyle.None;
+                this.Anchor = AnchorStyles.None;
+                this.Margin = new Padding(5);
             }
         }
         //texto para aclaraciones
         public class ShowControlText : Label
         {
+            private int diameter = 20;
             private Color textColor = Color.FromArgb(255, 255, 255);
-            public ShowControlText()
+            private Color backColor = Color.Black;
+            public ShowControlText(int d = 30)
             {
+                this.diameter = d;
                 this.ForeColor = textColor;
+                this.BackColor = backColor;
+                this.Dock = DockStyle.None;
+                this.Anchor = AnchorStyles.None;
+                this.TextAlign = ContentAlignment.MiddleCenter;
+                this.Font = new Font(this.Font, FontStyle.Bold);
+                this.Margin = new Padding(5);
             }
+            protected override void OnPaint(PaintEventArgs pevent)
+            {
+                base.OnPaint(pevent);
 
+                GraphicsPath path = new GraphicsPath();
+                Rectangle rectangulo = new Rectangle(0, 0, diameter, diameter);
+                path.AddArc(rectangulo, 180, 90);
+                rectangulo.X = this.Width - diameter;
+                path.AddArc(rectangulo, 270, 90);
+                rectangulo.Y = this.Height - diameter;
+                path.AddArc(rectangulo, 0, 90);
+                rectangulo.X = 0;
+                path.AddArc(rectangulo, 90, 90);
+                this.Region = new Region(path);
+            }
         }
         public class readerGrid : DataGridView
         {
