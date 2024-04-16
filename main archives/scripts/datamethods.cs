@@ -40,6 +40,52 @@ namespace sql_topicos_sc
             }
         }
 
+        //entidades débiles
+        public void add_detalles_medicamentos(int _id_farmacia, int _id_medicamento)
+        {
+            try
+            {
+                _connection.Open();
+                query = "insert into detalles_medicamentos (id_farmacia, id_medicamento)" +
+                    " values (@_id_farmacia, @_id_medicamento)";
+                cmd = new SqlCommand(query, _connection);
+                cmd.Parameters.AddWithValue("@_id_farmacia", _id_farmacia);
+                cmd.Parameters.AddWithValue("@_id_medicamento", _id_medicamento);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error en la conexión medicamentos-farmacias.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+        public void add_detalles_compras(int _id_ticket, int _id_medicamento)
+        {
+            try
+            {
+                _connection.Open();
+                query = "insert into detalles_medicamentos (id_farmacia, id_medicamento)" +
+                    " values (@_id_farmacia, @_id_medicamento)";
+                cmd = new SqlCommand(query, _connection);
+                cmd.Parameters.AddWithValue("@_id_farmacia", _id_ticket);
+                cmd.Parameters.AddWithValue("@_id_medicamento", _id_medicamento);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error en la conexión tickets-medicamentos.\n{e.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+
         //añadir
         public void add_farmacias(int _id_farmacia, string _nombre, string _telefono,
     string _domicilio, int _id_ciudad, int _id_propietario)
@@ -444,7 +490,6 @@ namespace sql_topicos_sc
                 }
                 if (!string.IsNullOrEmpty(_superficie))
                 {
-                    conditions += "superficie = @_superficie AND ";
                 }
                 if (!string.IsNullOrEmpty(_poblacion))
                 {
